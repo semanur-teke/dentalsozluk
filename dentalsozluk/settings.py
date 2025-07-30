@@ -28,12 +28,24 @@ import os
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 if DEBUG:
-    ALLOWED_HOSTS = ["localhost", "127.0.0.1", "dentalsozluk.com", "www.dentalsozluk.com", "dentalsozluk.onrender.com"]
+    ALLOWED_HOSTS = [
+        "localhost",
+        "127.0.0.1",
+        "dentalsozluk.com",
+        "www.dentalsozluk.com",
+        "dentalsozluk.onrender.com",  # <<< burayı ekleyin
+    ]
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SECURE = False
     SECURE_SSL_REDIRECT = False
 else:
-    ALLOWED_HOSTS = ["localhost", "127.0.0.1", "dentalsozluk.com", "www.dentalsozluk.com", "dentalsozluk.onrender.com"]
+    ALLOWED_HOSTS = [
+        "localhost",
+        "127.0.0.1",
+        "dentalsozluk.com",
+        "www.dentalsozluk.com",
+        "dentalsozluk.onrender.com",  # <<< burayı ekleyin
+    ]
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
