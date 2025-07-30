@@ -11,8 +11,7 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from .models import ErrorReport, DentalTerm
 from django.http import HttpResponse
-from ratelimit.decorators import ratelimit
-
+from ratelimit.decorators import rate_limited as ratelimit
 from django.shortcuts      import render
 from django.core.paginator  import Paginator
 from .models               import DentalTerm
