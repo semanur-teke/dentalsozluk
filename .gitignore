@@ -1,0 +1,21 @@
+# Sanal ortam
+.venv/
+venv/
+
+# IDE ayarları
+.idea/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# SQLite veritabanı
+db.sqlite3
+
+# Django migrations (isteğe bağlı; eğer ekip paylaşmayacaksa)
+**/migrations/
+
+# Diğer geçici dosyalar
+*.log
+*.pot
+*.py~
