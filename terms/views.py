@@ -11,17 +11,26 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from .models import ErrorReport, DentalTerm
 from django.http import HttpResponse
-from ratelimit.decorators import ratelimit
+
+
+try:
+    from ratelimit.decorators import ratelimit
+    print("✅ ratelimit başarıyla yüklendi")
+except ImportError as e:
+    print(f"❌ ratelimit import hatası: {e}")
+    def ratelimit(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
+
 from django.shortcuts      import render
 from django.core.paginator  import Paginator
 from .models               import DentalTerm
-# Model isimlerini buraya alıyoruz:
 from .models                       import DentalTerm, ErrorReport
 
 
 app_name = 'terms'
 
-# views.py dosyanızda home view'ını şu şekilde güncelleyin:
 
 from django.shortcuts import render
 
@@ -90,8 +99,8 @@ def term_list(request):
     page_terms = paginator.get_page(page_number)
 
     return render(request, 'terms/term_list.html', {
-        'terms':    page_terms,   # ← template’in beklediği isim
-        'page_obj': page_terms,   # ← paginasyon UI’si için opsiyonel
+        'terms':    page_terms,   # ← template'in beklediği isim
+        'page_obj': page_terms,   # ← paginasyon UI'si için opsiyonel
     })
 
 def term_detail(request, slug):
@@ -123,7 +132,6 @@ def report_error(request):
             term_id = request.POST.get('term_id')
             honeypot = request.POST.get('honeypot', '')
 
-        # 👇 Session key alma
         session_key = request.session.session_key
         if not session_key:
             request.session.create()
@@ -156,5 +164,3 @@ def report_error(request):
         return JsonResponse({'status': 'error', 'message': 'Terim bulunamadı'}, status=404)
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': 'Kayıt hatası'}, status=500)
-
-
