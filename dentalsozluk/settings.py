@@ -78,7 +78,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+"whitenoise.middleware.WhiteNoiseMiddleware",
 ]
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 ROOT_URLCONF = 'dentalsozluk.urls'
 
@@ -109,7 +113,7 @@ TEMPLATES = [
 # Static files ayarı
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [ BASE_DIR / 'static' ]
-#STATIC_ROOT     = BASE_DIR / 'static'     # collectstatic çıktısı
+STATIC_ROOT      = BASE_DIR / "staticfiles"    # collectstatic çıktısı
 
 
 WSGI_APPLICATION = 'dentalsozluk.wsgi.application'
