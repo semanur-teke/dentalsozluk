@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2 style="color: #7a5fac;">🔍 Aranan terim: "{{ query }}"</h2>
+  <hr>
+
+  {% if matched_term %}
+    <div class="term-card">
+      <h4>{{ matched_term.title }}</h4>
+      <p>{{ matched_term.description }}</p>
+      {% if matched_term.english_equivalent %}
+        <p><strong>EN:</strong> {{ matched_term.english_equivalent }}</p>
+      {% endif %}
+      {% if matched_term.latin_equivalent %}
+        <p><strong>LAT:</strong> {{ matched_term.latin_equivalent }}</p>
+      {% endif %}
+      <a href="{% url 'terms:term_detail' slug=matched_term.slug %}"
+         class="btn btn-sm mt-2"
+         style="background-color: #a678b4; color: white;">
+        Detay Sayfası
+      </a>
+    </div>
+  {% else %}
+    <p class="text-muted">Eşleşen terim bulunamadı.</p>
+  {% endif %}
+{% endblock %}

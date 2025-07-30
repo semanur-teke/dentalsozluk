@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block meta %}
+  <title>Gizlilik İlkesi – Dental Sözlük</title>
+{% endblock %}
+
+{% block content %}
+  <h1>Gizlilik İlkesi</h1>
+  <p><strong>Son Güncelleme:</strong> 30 Temmuz 2025</p>
+
+  <p>
+    Dental Sözlük kullanıcı gizliliğine büyük önem verir. 
+    Bu gizlilik ilkesi, <a href="https://www.dentalsozluk.com">www.dentalsozluk.com</a> adresini ziyaret ettiğinizde 
+    kişisel verilerinizin nasıl toplandığını, kullanıldığını, korunduğunu ve haklarınızı nasıl kullanabileceğinizi açıklar.
+  </p>
+
+  <h2>1. Topladığımız Veriler</h2>
+  <ul>
+    <li>
+      <strong>Kullanıcı Tarafından Sağlanan Veriler:</strong> Kayıt, iletişim formları veya hata bildirimi sırasında 
+      gönüllü olarak verdiğiniz ad, e‑posta vb.
+    </li>
+    <li>
+      <strong>Teknik ve Otomatik Veriler:</strong> IP adresi, tarayıcı türü, cihaz bilgisi, erişim tarihi ve saati, 
+      sayfa görüntüleme geçmişi (Google Analytics vb. anonim araçlarla).
+    </li>
+    <li>
+      <strong>Çerez Verileri:</strong> Tarayıcı çerezleri aracılığıyla toplanan dil tercihi, tema ayarı veya analitik veriler.
+    </li>
+  </ul>
+
+  <h2>2. Verilerin Kullanım Amaçları</h2>
+  <ul>
+    <li>Site performansını ve kullanım deneyimini iyileştirmek.</li>
+    <li>İstatistiksel analiz ve raporlama yapmak.</li>
+    <li>Size daha hızlı ve kişiselleştirilmiş bir site gezintisi sunmak.</li>
+    <li>İletişim formları ve hata raporları aracılığıyla gelen geri bildirimleri değerlendirmek.</li>
+  </ul>
+
+  <h2>3. Veri Paylaşımı ve Aktarımı</h2>
+  <p>
+    Topladığımız veriler hiçbir şekilde üçüncü taraflarla reklam veya ticari amaçla paylaşılmaz, satılmaz veya kiralanmaz.
+    Yalnızca aşağıdaki durumlarda veri paylaşımı yapılabilir:
+  </p>
+  <ul>
+    <li>
+      Yasal düzenlemeler gereği resmi merciler tarafından talep edilmesi halinde.
+    </li>
+    <li>
+      Site işletmesi ve teknik altyapı hizmetleri aldığımız sağlayıcılarla (barındırma, e‑posta servisi vb.)
+      sadece işin gerektirdiği ölçüde ve gizlilik sözleşmesi kapsamında.
+    </li>
+  </ul>
+
+  <h2>4. Veri Güvenliği</h2>
+  <p>
+    Verileriniz; SSL/TLS ile şifrelenmiş kanallar, güvenlik duvarları ve düzenli yedekleme politikaları ile korunur. 
+    İç erişim yetkileri sıkı şekilde kontrol edilir.
+  </p>
+
+  <h2>5. Kullanıcı Hakları (KVKK &amp; GDPR)</h2>
+  <p>Aşağıdaki haklarınızı kullanmak için <a href="mailto:info@dentalsozluk.com">info@dentalsozluk.com</a> adresine yazabilirsiniz:</p>
+  <ul>
+    <li>Kişisel verilerinize erişim talep etme</li>
+    <li>Veri düzeltme, güncelleme veya silme talep etme</li>
+    <li>Veri işlenmesine itiraz etme</li>
+    <li>Veri taşınabilirliği talep etme</li>
+    <li>Veri işleme rızasını geri çekme</li>
+  </ul>
+
+  <h2>6. Çerez Politikası</h2>
+  <p>
+    Site genelinde kullanılan çerezler ve amaçları hakkında bilgi almak için 
+    <a href="{% url 'terms:cerez_politikasi' %}">Çerez Politikası</a> sayfamızı ziyaret edebilirsiniz.
+  </p>
+
+  <h2>7. Politika Güncellemeleri</h2>
+  <p>
+    Bu gizlilik ilkesi zaman zaman güncellenebilir. “Son Güncelleme” tarihine bakarak 
+    en güncel metni incelemenizi öneririz.
+  </p>
+
+  <h2>8. İletişim</h2>
+  <p>
+    Gizlilikle ilgili her türlü soru ve talebinizi şöyle iletebilirsiniz:  
+    <a href="mailto:info@dentalsozluk.com">info@dentalsozluk.com</a>
+  </p>
+{% endblock %}

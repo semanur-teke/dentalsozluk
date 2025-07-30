@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2 class="mb-4" style="color: var(--link-color);">Tüm Diş Terimleri</h2>
+
+  {% for term in terms %}
+    <div class="term-card mb-4 p-3">
+      <h4>
+        <a href="{% url 'terms:term_detail' slug=term.slug %}">
+          {{ term.title }}
+        </a>
+      </h4>
+      <p>{{ term.description }}</p>
+      {% if term.english_equivalent %}
+        <p><strong>EN:</strong> {{ term.english_equivalent }}</p>
+      {% endif %}
+      {% if term.latin_equivalent %}
+        <p><strong>LAT:</strong> {{ term.latin_equivalent }}</p>
+      {% endif %}
+    </div>
+  {% empty %}
+    <p class="term-card-empty">Henüz terim eklenmemiş.</p>
+  {% endfor %}
+
+  <!-- Sayfalama Kontrolleri -->
+  <nav aria-label="Sayfa navigasyonu">
+    <ul class="pagination justify-content-center">
+
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+            ‹ Önceki
+          </a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">‹ Önceki</span>
+        </li>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if num == page_obj.number %}
+          <li class="page-item active">
+            <span class="page-link">{{ num }}</span>
+          </li>
+        {% elif num >= page_obj.number|add:-2 and num <= page_obj.number|add:2 %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+            Sonraki ›
+          </a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Sonraki ›</span>
+        </li>
+      {% endif %}
+
+    </ul>
+  </nav>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="home-container">
+  <div class="home-card">
+    <!-- templates/home.html veya ilgili şablon -->
+<h1 class="home-title d-flex align-items-center">
+  <img
+    src="{% static 'images/favicon.png' %}"
+    alt="Dental Sözlük Logo"
+    width="48"
+    height="48"
+    class="me-2"
+  >
+  Dental Sözlük
+</h1>
+
+      
+
+    <form class="search-form" method="get" action="{% url 'terms:search_results' %}">
+      <input type="text" name="q" class="form-control" placeholder="Bir terim ara (örn. maxilla)" required>
+      <button type="submit" class="btn btn-lg w-100">Ara</button>
+    </form>
+
+    <a href="{% url 'terms:term_list' %}" class="btn btn-outline mt-3">
+      Tüm Terimleri Gör
+    </a>
+  </div>
+</div>
+{% endblock %}

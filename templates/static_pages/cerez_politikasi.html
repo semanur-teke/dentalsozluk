@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block meta %}
+  <title>Çerez Politikası – Dental Sözlük</title>
+{% endblock %}
+
+{% block content %}
+  <h1>Çerez Politikası</h1>
+  <p><strong>Son Güncelleme:</strong> 30 Temmuz 2025</p>
+
+  <h2>1. Çerez Nedir?</h2>
+  <p>
+    Çerezler, web sitelerinin tarayıcınıza küçük metin dosyaları olarak kaydettiği verilerdir. 
+    Sizi tarayıcınız üzerinden tanımamıza ve site deneyiminizi kişiselleştirmemize yardımcı olurlar.
+  </p>
+
+  <h2>2. Neden Çerez Kullanıyoruz?</h2>
+  <ul>
+    <li>Kullanıcı oturumlarını yönetmek ve güvenliği sağlamak.</li>
+    <li>Site performansını ve trafiğini analiz etmek.</li>
+    <li>Kullanıcı tercihlerinizi (tema, dil vb.) hatırlamak.</li>
+    <li>Hedefli reklâm/analitik çözümler için sınırlı bilgiler toplamak.</li>
+  </ul>
+
+  <h2>3. Kullandığımız Çerez Türleri</h2>
+  <h3>Zorunlu (Kesinlikle Gerekli) Çerezler</h3>
+  <p>Site güvenliği, oturum yönetimi ve temel işlevler için zorunludur. Kapatılamaz.</p>
+
+  <h3>Performans / Analitik Çerezleri</h3>
+  <p>Google Analytics gibi araçlarla site trafiğini ve davranışını anonim veri olarak toplar.</p>
+
+  <h3>Fonksiyonel / Tercih Çerezleri</h3>
+  <p>Dil, tema (dark/light) veya diğer kullanıcı tercihlerinizi kaydeder.</p>
+
+  <h3>Hedefleme / Reklam Çerezleri</h3>
+  <p>Reklam ağları ve sosyal paylaşım butonları tarafından kişiselleştirilmiş içerik sunmak için kullanılır.</p>
+
+  <h2>4. Çerez Listesi ve Süreleri</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Çerez Adı</th>
+        <th>Tür</th>
+        <th>Amaç</th>
+        <th>Ömür</th>
+        <th>Üçüncü Taraf</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>sessionid</code></td>
+        <td>Zorunlu</td>
+        <td>Django oturum yönetimi</td>
+        <td>Oturum sonu</td>
+        <td>Hayır</td>
+      </tr>
+      <tr>
+        <td><code>csrftoken</code></td>
+        <td>Zorunlu</td>
+        <td>CSRF koruması</td>
+        <td>1 yıl</td>
+        <td>Hayır</td>
+      </tr>
+      <tr>
+        <td><code>_ga</code></td>
+        <td>Analitik</td>
+        <td>Google Analytics – kullanıcı tanımlama</td>
+        <td>2 yıl</td>
+        <td>Evet</td>
+      </tr>
+      <tr>
+        <td><code>_gid</code></td>
+        <td>Analitik</td>
+        <td>Google Analytics – kullanıcı tanımlama</td>
+        <td>24 saat</td>
+        <td>Evet</td>
+      </tr>
+      <tr>
+        <td><code>_gat</code></td>
+        <td>Analitik</td>
+        <td>Google Analytics – istek hız sınırı</td>
+        <td>1 dakika</td>
+        <td>Evet</td>
+      </tr>
+      <tr>
+        <td><code>dark-mode</code></td>
+        <td>Fonksiyonel</td>
+        <td>Tema tercihi (dark/light)</td>
+        <td>1 yıl</td>
+        <td>Hayır</td>
+      </tr>
+      <tr>
+        <td><code>django_language</code></td>
+        <td>Fonksiyonel</td>
+        <td>Dil tercihi</td>
+        <td>1 yıl</td>
+        <td>Hayır</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>5. Çerez Yönetimi</h2>
+  <p>
+    Çerez tercihlerinizi her zaman tarayıcı ayarlarınızdan değiştirebilir veya silebilirsiniz.
+    Bununla birlikte, bazı çerezleri devre dışı bırakmanız durumunda site işlevlerinin tam
+    çalışmayabileceğini unutmayın.
+  </p>
+  <ul>
+    <li><strong>Chrome:</strong> Ayarlar → Gizlilik ve güvenlik → Çerezler ve diğer site verileri</li>
+    <li><strong>Firefox:</strong> Seçenekler → Gizlilik ve Güvenlik → Çerezler ve Site Verileri</li>
+    <li><strong>Safari:</strong> Tercihler → Gizlilik → Çerezleri Yönet</li>
+  </ul>
+
+  <h2>6. Üçüncü Taraf Çerezleri</h2>
+  <p>
+    Sitemizde Google Analytics, sosyal paylaşım butonları veya reklam ağları tarafından yerleştirilen
+    çerezler bulunabilir. Bu üçüncü tarafların kendi gizlilik politikalarını incelemeniz
+    önerilir.
+  </p>
+
+  <h2>7. Yasal Dayanak</h2>
+  <p>
+    KVKK ve GDPR kapsamında şu haklara sahipsiniz:
+    <ul>
+      <li>Çerez rızanızı geri çekme</li>
+      <li>Veri erişimi ve silinmesi talepleri</li>
+      <li>Diğer KVKK/GDPR hakları</li>
+    </ul>
+    Detaylı bilgi için <a href="{% url 'terms:gizlilik_ilkesi' %}">Gizlilik İlkesi</a> sayfamızı ziyaret edebilirsiniz.
+  </p>
+
+  <h2>8. Politika Güncellemeleri</h2>
+  <p>
+    Bu politika zaman zaman güncellenebilir. “Son Güncelleme” tarihine bakarak en güncel metni inceleyebilirsiniz.
+  </p>
+
+  <h2>9. İletişim</h2>
+  <p>
+    Çerez politikamızla ilgili her türlü soru ve talebiniz için:
+    <a href="mailto:privacy@dentalsozluk.com">privacy@dentalsozluk.com</a>
+  </p>
+{% endblock %}

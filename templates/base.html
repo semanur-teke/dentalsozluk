@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+  <script>
+  window.cookieConsentConfig = {
+    darkModeScript: "{% static 'js/dark-mode-toggle.js' %}",
+    reportErrorScript: "{% static 'js/report-error.js' %}"
+    // İleride targeting veya başka scriptler de ekleyebilirsin.
+  };
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+{% block meta %}
+  <title>Dental Sözlük</title>
+  <!-- Favicon -->
+  <link
+    rel="icon"
+    href="{% static 'images/favicon.png' %}"
+    type="image/png"
+  >
+{% endblock %}
+
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    >
+    <!-- Font Awesome for social icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Özel CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+  
+      <!-- Cookie Consent Banner -->
+<div id="cookie-banner" class="cookie-banner hidden">
+  <div class="cookie-banner__content">
+    <p>Bu site deneyimini iyileştirmek için çerezler kullanır.</p>
+    <div class="cookie-banner__buttons">
+      <button id="accept-all">Tümünü Kabul Et</button>
+      <button id="accept-necessary">Sadece Zorunlu</button>
+      <button id="show-settings">Ayarlar</button>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Tek include -->
+    {% include "partials/navbar.html" %}
+
+    <main class="container mt-5 pt-5 static-page">
+      {% block content %}{% endblock %}
+    </main>
+    
+<!-- Footer -->
+<footer class="dental-footer">
+  <div class="dental-footer-inner">
+
+    <div class="footer-section">
+      <span>
+<a href="{% url 'terms:hakkimizda' %}">Hakkımızda</a> ·
+<a href="{% url 'terms:cerez_politikasi' %}">Çerez Politikası</a> ·
+<a href="{% url 'terms:gizlilik_ilkesi' %}">Gizlilik İlkesi</a>
+
+      </span>
+    </div>
+
+    <div class="footer-section">
+      <span>2025 &copy; Dental Sözlük – Tüm Hakları Saklıdır</span>
+    </div>
+
+    <div class="footer-section">
+<div class="social-icons">
+  <a class="icon-btn instagram" href="#" target="_blank">
+    <i class="fab fa-instagram"></i>
+  </a>
+
+<a class="icon-btn email" href="mailto:info@dentalsozluk.com" title="info@dentalsozluk.com">
+    <i class="fas fa-envelope"></i>
+  </a>
+</div>
+
+    </div>
+
+  </div>
+</footer>
+
+
+
+    <!-- Dark-mode & hata-scripts -->
+    <script src="{% static 'js/dark-mode-toggle.js' %}"></script>
+    <script src="{% static 'js/report-error.js' %}"></script>
+      <script src="{% static 'js/cookie-consent.js' %}"></script>
+    
+
+    <!-- BOOTSTRAP JS BUNDLE -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ENjdO4dr2bkBIFxQpeoY…"
+      crossorigin="anonymous"
+    ></script>
+  
+  </body>
+</html>

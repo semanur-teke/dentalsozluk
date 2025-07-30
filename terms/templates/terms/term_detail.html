@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block meta %}
+  <title>{{ term.title }} | Dental Sözlük</title>
+  <meta name="description" content="{{ term.description|truncatechars:160 }}">
+  <meta property="og:title" content="{{ term.title }} | Dental Sözlük">
+  <meta property="og:description" content="{{ term.description|truncatechars:160 }}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  <meta property="og:image" content="{% static 'images/seo-image.jpg' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="term-card" id="term-{{ term.id }}">
+    <h2>{{ term.title }}</h2>
+    <p>{{ term.description }}</p>      {# description, definition değil #}
+
+    <form
+      class="error-report-form"
+      data-action="{% url 'terms:report_error' %}"
+    >
+      {% csrf_token %}
+      <input type="hidden" name="term_id" value="{{ term.id }}">
+      <input
+        type="text"
+        name="honeypot"
+        style="display:none"
+        tabindex="-1"
+        autocomplete="off"
+      >
+      <button type="submit" class="error-report-btn">
+        ⚠️ Hata Bildir
+      </button>
+    </form>
+
+    {% if term.english_equivalent %}
+      <p><strong>EN:</strong> {{ term.english_equivalent }}</p>
+    {% endif %}
+    {% if term.latin_equivalent %}
+      <p><strong>LAT:</strong> {{ term.latin_equivalent }}</p>
+    {% endif %}
+  </div>
+{% endblock %}

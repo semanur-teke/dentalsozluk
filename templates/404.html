@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container text-center mt-5">
+  <h1>404 – Sayfa Bulunamadı</h1>
+  <p>Aradığınız sayfa mevcut değil veya taşınmış olabilir.</p>
+  <a href="{% url 'home' %}" class="btn btn-primary mt-3">Ana Sayfaya Dön</a>
+</div>
+{% endblock %}
