@@ -8,7 +8,9 @@ from terms.sitemaps import TermSitemap
 sitemaps = {
     'terms': TermSitemap,
 }
-
+from .views import (
+    debug_count,
+)
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -18,6 +20,7 @@ urlpatterns = [
     path('report_error/', views.report_error, name='report_error'),
     path("robots.txt", robots_txt, name="robots_txt"),
     path("sitemap.xml", sitemap, {'sitemaps': sitemaps}, name='sitemap'),
+    path("debug-count/", debug_count),
 
     # ← Statik sayfalarınızı buraya ekleyin:
     path('hakkimizda/', views.hakkimizda, name='hakkimizda'),

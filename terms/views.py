@@ -164,3 +164,12 @@ def report_error(request):
         return JsonResponse({'status': 'error', 'message': 'Terim bulunamadı'}, status=404)
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': 'Kayıt hatası'}, status=500)
+
+
+from django.http import JsonResponse
+from django.urls import path
+from terms.models import DentalTerm
+
+def debug_count(request):
+    return JsonResponse({"count": DentalTerm.objects.count()})
+
