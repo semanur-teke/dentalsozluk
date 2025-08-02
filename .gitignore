@@ -12,8 +12,8 @@ __pycache__/
 # SQLite veritabanı
 db.sqlite3
 
-# Django migrations (isteğe bağlı; eğer ekip paylaşmayacaksa)
-**/migrations/
+# Django migrations (isteğe bağlı)
+# **/migrations/
 
 # Diğer geçici dosyalar
 *.log
@@ -22,3 +22,6 @@ db.sqlite3
 
 # Local environment variables
 .env
+
+# Django collectstatic output
+staticfiles/
