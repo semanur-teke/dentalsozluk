@@ -15,14 +15,17 @@
     });
   </script>
 {% endif %}
-  <script>
-  window.cookieConsentConfig = {
-    darkModeScript: "{% static 'js/dark-mode-toggle.js' %}",
-    reportErrorScript: "{% static 'js/report-error.js' %}"
-    // İleride targeting veya başka scriptler de ekleyebilirsin.
-  };
-</script>
+    {# 1) Django’dan Measurement ID ve mevcut script yollarını JS’e aktarıyoruz #}
+    <script>
+      window.GA_MEASUREMENT_ID = "{{ GA_MEASUREMENT_ID }}";
+      window.cookieConsentConfig = {
+        darkModeScript: "{% static 'js/dark-mode-toggle.js' %}",
+        reportErrorScript: "{% static 'js/report-error.js' %}"
+      };
+    </script>
 
+    {# 2) Cookie consent logic’in JS’i #}
+    <script src="{% static 'js/cookie-consent.js' %}"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
 {% block meta %}
