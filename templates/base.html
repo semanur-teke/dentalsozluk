@@ -2,6 +2,19 @@
 <!DOCTYPE html>
 <html lang="tr">
   <head>
+<!-- base.html - Production GA4 Kodu -->
+{% if GA_MEASUREMENT_ID %}
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ GA_MEASUREMENT_ID }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ GA_MEASUREMENT_ID }}', {
+      cookie_flags: 'SameSite=None;Secure'
+    });
+  </script>
+{% endif %}
   <script>
   window.cookieConsentConfig = {
     darkModeScript: "{% static 'js/dark-mode-toggle.js' %}",
