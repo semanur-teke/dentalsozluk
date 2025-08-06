@@ -25,3 +25,8 @@ db.sqlite3
 
 # Django collectstatic output
 staticfiles/
+# Env yedekleri
+.env.save
+
+# CSV script çıktıları
+scripts/*.csv

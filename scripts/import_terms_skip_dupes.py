@@ -18,8 +18,9 @@ from terms.models import DentalTerm
 import csv
 
 def main():
-    infile  = r'D:\Desktop\datas\veriler14.csv'
-    dupfile = 'duplicates1.csv'
+    infile  = '/var/www/dentalsozluk/scripts/duplicates1.csv'
+    dupfile = '/var/www/dentalsozluk/scripts/dup.csv'
+
 
     seen = set(DentalTerm.objects.values_list('slug', flat=True))
 

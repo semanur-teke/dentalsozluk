@@ -29,6 +29,7 @@ DATABASES = {
         ssl_require=not DEBUG,
     )
 }
+
 # Google Analytics
 GA_MEASUREMENT_ID = os.getenv('GA_MEASUREMENT_ID', '')
 
@@ -36,28 +37,65 @@ if DEBUG:
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SECURE = False
     SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = True
 else:
-    SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
+    # Production güvenlik ayarları - DÜZELTİLDİ
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    SESSION_COOKIE_HTTPONLY    = True     # ← HttpOnly çerez bayrağı
-    CSRF_COOKIE_HTTPONLY       = True     # ← HttpOnly CSRF çerezi
+    SESSION_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = True
+    X_FRAME_OPTIONS = 'DENY'
+    SECURE_REFERRER_POLICY = 'no-referrer-when-downgrade'
 
-    X_FRAME_OPTIONS            = 'DENY'   # ← clickjacking koruması
+    # CSP ayarları
+CSP_DEFAULT_SRC = (
+    "'self'",
+)
 
-    # Referrer-Policy
-    SECURE_REFERRER_POLICY     = 'no-referrer-when-downgrade'  # ← Referrer header
+CSP_SCRIPT_SRC = (
+    "'self'",
+    "'unsafe-inline'",                # inline <script>’lere izin
+    'www.googletagmanager.com',
+    'www.google-analytics.com',
+    'cdn.jsdelivr.net',                # Bootstrap JS
+    'cdnjs.cloudflare.com',            # FontAwesome ve benzeri
+)
 
-    # Content-Security-Policy (django-csp kullanarak)
-    CSP_DEFAULT_SRC            = ("'self'",)
-    CSP_SCRIPT_SRC             = ("'self'", 'www.googletagmanager.com')
+CSP_STYLE_SRC = (
+    "'self'",
+    "'unsafe-inline'",                 # inline <style> ve style=""
+    'cdn.jsdelivr.net',                # Bootstrap CSS
+    'cdnjs.cloudflare.com',            # FontAwesome CSS
+)
+
+CSP_FONT_SRC = (
+    "'self'",
+    'fonts.gstatic.com',               # Google Fonts
+    'cdn.jsdelivr.net',
+    'cdnjs.cloudflare.com',
+    'data:',                           # base64 font’lar
+)
+
+CSP_IMG_SRC = (
+    "'self'",
+    'data:',
+    'https:',
+    'www.google-analytics.com',
+)
+
+CSP_CONNECT_SRC = (
+    "'self'",
+    'www.google-analytics.com',
+    'analytics.google.com',
+)
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -80,8 +118,9 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',  # ← provides X_FRAME_OPTIONS
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 ROOT_URLCONF = 'dentalsozluk.urls'
 
@@ -99,7 +138,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-		'dentalsozluk.context_processors.google_analytics',
+                'dentalsozluk.context_processors.google_analytics',
             ],
         },
     },
@@ -110,13 +149,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [ BASE_DIR / 'static' ]
 STATIC_ROOT      = BASE_DIR / "staticfiles"    # collectstatic çıktısı
 
-
 WSGI_APPLICATION = 'dentalsozluk.wsgi.application'
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -132,20 +168,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'www.googletagmanager.com')
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
