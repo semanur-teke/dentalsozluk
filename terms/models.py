@@ -1,12 +1,14 @@
+
 from django.db import models
 from django.utils.text import slugify
 
 class DentalTerm(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=255)
     description = models.TextField()
     english_equivalent = models.CharField(max_length=100, blank=True, null=True)
     latin_equivalent = models.CharField(max_length=100, blank=True, null=True)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True)
+    
 
     def save(self, *args, **kwargs):
         if not self.slug:
