@@ -29,22 +29,33 @@ DATABASES = {
         ssl_require=not DEBUG,
     )
 }
-
+# Google Analytics
+GA_MEASUREMENT_ID = os.getenv('GA_MEASUREMENT_ID', '')
 
 if DEBUG:
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SECURE = False
     SECURE_SSL_REDIRECT = False
 else:
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
+    SESSION_COOKIE_HTTPONLY    = True     # ← HttpOnly çerez bayrağı
+    CSRF_COOKIE_HTTPONLY       = True     # ← HttpOnly CSRF çerezi
 
+    X_FRAME_OPTIONS            = 'DENY'   # ← clickjacking koruması
+
+    # Referrer-Policy
+    SECURE_REFERRER_POLICY     = 'no-referrer-when-downgrade'  # ← Referrer header
+
+    # Content-Security-Policy (django-csp kullanarak)
+    CSP_DEFAULT_SRC            = ("'self'",)
+    CSP_SCRIPT_SRC             = ("'self'", 'www.googletagmanager.com')
 # Application definition
 
 INSTALLED_APPS = [
@@ -56,19 +67,21 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'terms',
     'django.contrib.sitemaps',
+    'csp',
 ]
 
+# ─── MIDDLEWARE ────────────────────────────────────────────────────────────────
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'csp.middleware.CSPMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',  # ← provides X_FRAME_OPTIONS
 ]
-
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 ROOT_URLCONF = 'dentalsozluk.urls'
 
@@ -86,6 +99,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+		'dentalsozluk.context_processors.google_analytics',
             ],
         },
     },
