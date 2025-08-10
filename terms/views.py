@@ -12,6 +12,7 @@ from django.http import JsonResponse
 from .models import ErrorReport, DentalTerm
 from django.http import HttpResponse
 
+from django.urls import reverse
 
 from django_ratelimit.decorators import ratelimit
 
@@ -84,16 +85,6 @@ def search_results(request):
 
 
 
-def term_list(request):
-    queryset   = DentalTerm.objects.all().order_by('title')
-    paginator  = Paginator(queryset, 10)
-    page_number= request.GET.get('page')
-    page_terms = paginator.get_page(page_number)
-
-    return render(request, 'terms/term_list.html', {
-        'terms':    page_terms,   # ← template'in beklediği isim
-        'page_obj': page_terms,   # ← paginasyon UI'si için opsiyonel
-    })
 
 def term_detail(request, slug):
     term = get_object_or_404(DentalTerm, slug=slug)
@@ -165,3 +156,98 @@ from terms.models import DentalTerm
 def debug_count(request):
     return JsonResponse({"count": DentalTerm.objects.count()})
 
+def autocomplete_terms(request):
+    q = (request.GET.get("q") or "").strip()
+    if len(q) < 2:
+        return JsonResponse([], safe=False)
+
+    rows = (DentalTerm.objects
+            .filter(
+                Q(title__icontains=q) |
+                Q(english_equivalent__icontains=q) |
+                Q(latin_equivalent__icontains=q)
+            )
+            .order_by("title")
+            .values("slug", "title")[:5])
+
+    data = [{"title": r["title"],
+             "url":  reverse("terms:term_detail", kwargs={"slug": r["slug"]})}
+            for r in rows]
+    return JsonResponse(data, safe=False)
+
+from django.core.paginator import Paginator
+from django.db.models import Q, F, Func
+from django.db.models.functions import Lower, Substr, Upper
+from django.shortcuts import render
+from .models import DentalTerm  # model adın buysa
+
+RESULTS_PER_PAGE = 20
+
+def _apply_alpha_filter(qs, letter: str):
+    if not letter or letter.lower() == "all":
+        return qs
+    if letter == "0-9":
+        return qs.filter(title__iregex=r"^[0-9]")
+    # Lower(unaccent(title)) ile baş harf (index olmasa da çalışır)
+    qs = qs.annotate(title_unaccent_lower=Lower(Func(F("title"), function="unaccent")))
+    return qs.filter(title_unaccent_lower__startswith=letter.lower())
+
+def _available_letters():
+    letters = (
+        DentalTerm.objects
+        .annotate(first=Upper(Substr("title", 1, 1)))
+        .values_list("first", flat=True)
+        .distinct()
+    )
+    has_digit = any(l and l.isdigit() for l in letters)
+    letters = sorted({l for l in letters if l and l.isalpha()})
+    return letters, has_digit
+
+def term_list(request):
+    qs = (DentalTerm.objects
+          .only("id","slug","title","english_equivalent","latin_equivalent","description")
+          .order_by("title"))
+
+    # GET parametreleri
+    letter = request.GET.get("letter", "")
+    q = (request.GET.get("q") or "").strip()
+
+    # Harf filtresi
+    qs = _apply_alpha_filter(qs, letter)
+
+    # Basit metin arama
+    if q:
+        qs = qs.filter(
+            Q(title__icontains=q) |
+            Q(description__icontains=q) |
+            Q(english_equivalent__icontains=q) |
+            Q(latin_equivalent__icontains=q)
+        )
+
+    # Sayfalama + elided range
+    paginator   = Paginator(qs, RESULTS_PER_PAGE)
+    page_number = request.GET.get("page")
+    page_obj    = paginator.get_page(page_number)
+    page_range  = paginator.get_elided_page_range(number=page_obj.number, on_each_side=1, on_ends=1)
+
+    # page dışındaki parametreleri koru
+    preserved = request.GET.copy()
+    preserved.pop("page", None)
+    preserved_qs = preserved.urlencode()
+
+    # Alfabe menüsü için mevcut harfler
+    letters, has_digit = _available_letters()
+
+    # DİKKAT: Template'in beklediği isimleri bozmayalım
+    return render(request, 'terms/term_list.html', {
+        'terms':         page_obj,        # template zaten bunu kullanıyordu
+        'page_obj':      page_obj,
+        'paginator':     paginator,
+        'page_range':    page_range,
+        'q':             q,
+        'letter':        letter,
+        'letters':       letters,
+        'has_digit':     has_digit,
+        'preserved_qs':  preserved_qs,
+        'total_count':   paginator.count,
+    })

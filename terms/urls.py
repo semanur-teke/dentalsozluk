@@ -22,6 +22,7 @@ urlpatterns = [
     path("sitemap.xml", sitemap, {'sitemaps': sitemaps}, name='sitemap'),
     path("debug-count/", debug_count),
 
+    path('autocomplete/', views.autocomplete_terms, name='autocomplete_terms'),
     # ← Statik sayfalarınızı buraya ekleyin:
     path('hakkimizda/', views.hakkimizda, name='hakkimizda'),
     path('cerez-politikasi/', views.cerez_politikasi, name='cerez_politikasi'),
