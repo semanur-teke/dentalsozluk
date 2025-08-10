@@ -19,13 +19,10 @@
       
 
     <form class="search-form" method="get" action="{% url 'terms:search_results' %}">
-      <input type="text" name="q" class="form-control" placeholder="Bir terim ara (örn. maxilla)" required>
+      <input type="text" name="q" class="form-control" placeholder="Bir terim ara.." required>
       <button type="submit" class="btn btn-lg w-100">Ara</button>
     </form>
 
-    <a href="{% url 'terms:term_list' %}" class="btn btn-outline mt-3">
-      Tüm Terimleri Gör
-    </a>
   </div>
 </div>
 {% endblock %}

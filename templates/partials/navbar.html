@@ -1,81 +1,33 @@
 {% load static %}
+<nav class="modern-navbar">
+  <div class="navbar-container">
+    
+    <!-- Logo -->
+    <a href="{% url 'terms:home' %}" class="navbar-logo">
+      <img src="{% static 'images/favicon.png' %}" alt="Dental Sözlük Logo" />
+      Dental Sözlük
+    </a>
 
+    <!-- Arama Kutusu -->
+    {% if not hide_search %}
+    <form class="navbar-search" method="get" action="{% url 'terms:search_results' %}">
+      <input type="search" 
+             name="q" 
+             class="search-input" 
+             placeholder="Terim ara..." 
+             value="{{ request.GET.q }}"
+             aria-label="Terim ara">
+      <button type="submit" class="search-btn">
+        <i class="fas fa-search"></i>
+      </button>
+    </form>
+    {% endif %}
 
-<nav class="navbar navbar-expand-md shadow-sm fixed-top"
-     style="background-color: var(--navbar-bg); color: var(--navbar-text);">
-  <div class="container">
-
-{% load static %}
-{# 1) Logo #}
-<a class="navbar-brand fw-bold d-flex align-items-center"
-   href="{% url 'terms:home' %}"
-   style="color: var(--link-color);">
-  <img
-    src="{% static 'images/favicon.png' %}"
-    alt="Dental Sözlük Logo"
-    width="48"
-    height="48"
-    class="me-2"
-  >
-  Dental Sözlük
-</a>
-
-
-    {# 2) Hamburger butonu #}
-    <button class="navbar-toggler" type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarContent"
-            aria-controls="navbarContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    {# 3) Koyu/Aydınlık Mod Düğmesi #}
-    <button id="darkModeToggle"
-            class="btn btn-sm ms-auto me-2 my-2 my-md-0"
-            style="background-color: var(--btn-bg);
-                   color: var(--btn-text);
-                   border: 1px solid var(--btn-border);">
-      🌙 Koyu Mod
-    </button>
-
-    {# 4) Menü içeriği #}
-    <div class="collapse navbar-collapse" id="navbarContent">
-      <ul class="navbar-nav me-auto mb-2 mb-md-0">
-        <li class="nav-item">
-          <a class="nav-link btn btn-sm me-2 my-2 my-md-0"
-             href="{% url 'terms:term_list' %}"
-             style="background-color: var(--btn-bg);
-                    color: var(--btn-text);
-                    border: 1px solid var(--btn-border);">
-            Tüm Kelimeleri Görüntüle
-          </a>
-        </li>
-      </ul>
-
-      {# 5) Arama Kutusu (sadece home dışında gösterilir) #}
-      {% if not hide_search %}
-      <form class="d-flex me-3 my-2 my-md-0"
-            method="get"
-            action="{% url 'terms:search_results' %}">
-        <input class="form-control me-2"
-               type="search" name="q"
-               placeholder="Terim ara…"
-               aria-label="Search"
-               style="background-color: var(--card-bg);
-                      color: var(--text-color);
-                      border: 1px solid var(--card-border);">
-        <button class="btn btn-sm"
-                type="submit"
-                style="background-color: var(--btn-bg);
-                       color: var(--btn-text);
-                       border: 1px solid var(--btn-border);">
-          Ara
-        </button>
-      </form>
-      {% endif %}
-
+    <!-- Menü (sadece Tüm Kelimeler ve Tema) -->
+    <div class="navbar-menu">
+      <a href="{% url 'terms:term_list' %}" class="menu-item">Tüm Kelimeler</a>
+      <button id="darkModeToggle" class="theme-toggle">🌙</button>
     </div>
+
   </div>
 </nav>
