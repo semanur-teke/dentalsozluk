@@ -64,46 +64,6 @@ html.dark-mode {
   padding: 0 15px;
 }
 
-/* Navbar responsive */
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--navbar-bg);
-  color: var(--navbar-text);
-  padding: 12px 20px;
-  box-shadow: var(--shadow-light);
-  transition: background-color 0.3s ease, color 0.3s ease;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-.navbar-brand {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--link-color);
-  text-decoration: none;
-}
-
-.navbar-nav {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.navbar-nav a {
-  color: var(--navbar-text);
-  text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  transition: all 0.3s ease;
-}
-
-.navbar-nav a:hover {
-  background-color: var(--btn-bg);
-  color: var(--btn-text);
-}
 
 /* Main content responsive */
 main {
@@ -712,6 +672,8 @@ html.dark-mode .navbar-toggler-icon {
   }
 }
 /* ===== MODERN NAVBAR ===== */
+/* ===== MODERN NAVBAR ===== */
+/* ===== MODERN NAVBAR ===== */
 .modern-navbar {
   position: fixed;
   top: 0;
@@ -722,7 +684,6 @@ html.dark-mode .navbar-toggler-icon {
   border-bottom: 1px solid var(--card-border);
   box-shadow: var(--shadow-light);
   z-index: 1000;
-  height: 70px;
   transition: background-color 0.3s ease;
 }
 
@@ -730,11 +691,11 @@ html.dark-mode .navbar-toggler-icon {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-  height: 100%;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 20px;
+  min-height: 70px;
 }
 
 /* Logo */
@@ -861,7 +822,7 @@ html.dark-mode .navbar-toggler-icon {
 
 /* Body padding - navbar yüksekliği kadar */
 body {
-  padding-top: 80px;
+  padding-top: 70px;
 }
 
 /* Tablet görünümü */
@@ -869,24 +830,19 @@ body {
   .navbar-container {
     grid-template-columns: auto 1fr;
     gap: 15px;
+    padding-bottom: 15px;
   }
   
   .navbar-menu {
     grid-column: 1 / -1;
     justify-content: center;
-    margin-top: 10px;
+    margin-top: 0;
     padding-top: 10px;
     border-top: 1px solid var(--card-border);
   }
 
-  .modern-navbar {
-    height: auto;
-    min-height: 70px;
-    padding: 10px 0;
-  }
-
   body {
-    padding-top: 60px;
+    padding-top: 90px;
   }
 }
 
@@ -896,6 +852,7 @@ body {
     grid-template-columns: 1fr;
     gap: 15px;
     padding: 15px;
+    min-height: auto;
   }
 
   .navbar-logo {
@@ -921,7 +878,7 @@ body {
   }
 
   body {
-    padding-top: 40px;
+    padding-top: 120px;
   }
 }
 
@@ -945,7 +902,13 @@ body {
     width: 35px;
     height: 35px;
   }
+
+  body {
+    padding-top: 130px;
+  }
 }
+
+
 /* ==== HOME ARAMA BİLEŞENİ (dark mode fix) ==== */
 html.dark-mode .home-card .form-control,
 html.dark-mode .search-form .form-control,

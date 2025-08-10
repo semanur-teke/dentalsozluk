@@ -13,15 +13,7 @@ from .models import ErrorReport, DentalTerm
 from django.http import HttpResponse
 
 
-try:
-    from ratelimit.decorators import ratelimit
-    print("✅ ratelimit başarıyla yüklendi")
-except ImportError as e:
-    print(f"❌ ratelimit import hatası: {e}")
-    def ratelimit(*args, **kwargs):
-        def decorator(func):
-            return func
-        return decorator
+from django_ratelimit.decorators import ratelimit
 
 from django.shortcuts      import render
 from django.core.paginator  import Paginator
@@ -111,7 +103,7 @@ def term_detail(request, slug):
 
 
 
-@ratelimit(key='ip', rate='5/m', method='POST', block=False)
+@ratelimit(key='ip', rate='3/m', method='POST', block=True)
 @require_POST
 def report_error(request):
     if getattr(request, 'limited', False):
