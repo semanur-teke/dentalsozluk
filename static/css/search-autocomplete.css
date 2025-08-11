@@ -1,0 +1,146 @@
+/* ===========================
+   Search + Autocomplete + Alfabe
+   (dark-mode uyumlu, tekrarlar temiz)
+   =========================== */
+
+/* ---- Tema alias değişkenleri (style.css'deki değişkenlere bağlanır) ---- */
+:root{
+  --surface: var(--card-bg);
+  --border: var(--card-border);
+  --text: var(--text-color);
+  --text-muted: rgba(127,127,127,.85);
+  --tag-bg: rgba(90,42,111,.08);           /* hover/aktif zemin */
+  --shadow: var(--shadow-medium);
+  --shadow-small: 0 2px 8px rgba(0,0,0,.08);
+}
+html.dark-mode{
+  /* dark’ta hover/aktif biraz daha belirgin */
+  --tag-bg: rgba(90,42,111,.20);
+  --shadow-small: 0 2px 8px rgba(0,0,0,.60);
+}
+
+/* ---- Arama formu: kutunun referansı ---- */
+.navbar-search{ position:relative; }
+
+/* ===================== */
+/*  AUTOCOMPLETE KUTUSU  */
+/* ===================== */
+#suggestions-box{
+  position:absolute; top:calc(100% + 8px); left:0; right:0;
+  display:none; z-index:2000;
+  max-height:320px; overflow:auto;
+  border-radius:12px;
+  background:var(--surface);
+  color:var(--text);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+}
+
+#suggestions-box .item{
+  display:flex; align-items:center; gap:8px;
+  padding:10px 14px; line-height:1.35; cursor:pointer;
+  border-bottom:1px solid transparent;
+  color:var(--text);
+}
+#suggestions-box .item:hover,
+#suggestions-box .item.active{
+  background:var(--tag-bg);
+}
+#suggestions-box .kw{
+  font-weight:600; color:var(--link-color);
+}
+#suggestions-box .empty{
+  padding:12px 14px; color:var(--text); opacity:.7;
+}
+
+/* Mobilde biraz sığdır */
+@media (max-width:480px){
+  #suggestions-box{ max-height:260px; }
+}
+
+/* Arama input’u (navbar içindeki) temaya uyumlu olsun */
+.navbar-search .search-input{
+  background:var(--surface);
+  color:var(--text);
+  border:1px solid var(--border);
+}
+.navbar-search .search-input::placeholder{
+  color:var(--text-muted);
+}
+
+/* ===================== */
+/*     ALFABE / HARFLER  */
+/* ===================== */
+.letter-filter{
+  display:flex; flex-wrap:wrap; gap:8px;
+  justify-content:center; margin:20px 0;
+}
+
+.letter-filter a{
+  display:flex; align-items:center; justify-content:center;
+  width:38px; height:38px; font-weight:600;
+  border-radius:8px;
+  background:var(--surface);
+  color:var(--link-color);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-small);
+  text-decoration:none;
+  transition:all .2s ease-in-out;
+}
+.letter-filter a:hover{
+  background:var(--link-color); color:#fff; border-color:var(--link-color);
+}
+.letter-filter a.active{
+  background:var(--link-color); color:#fff; border-color:var(--link-color);
+}
+.letter-filter a.all{
+  padding:0 14px; width:auto; min-width:50px;
+}
+
+/* Küçük ekran */
+@media (max-width:480px){
+  .letter-filter a{ width:32px; height:32px; font-size:.85rem; }
+}
+
+/* ===================== */
+/*  (İsteğe bağlı) Sözlük başlık/kart arası boşluklar  */
+/* ===================== */
+.dictionary-container{ max-width:960px; margin:0 auto; padding:8px 12px; }
+.dictionary-header h1{ margin:10px 0 12px; }
+
+.term-list{ display:flex; flex-direction:column; gap:14px; }
+.term-card{ margin:0; }
+.term-title a{ text-decoration:none; }
+.term-title a:hover{ text-decoration:underline; }
+
+/* ===================== */
+/* Dark mode uyumlu alfabe menü */
+/* ===================== */
+.alphabet-nav a {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  line-height: 1.2;
+  border: 1px solid var(--card-border);
+  color: var(--link-color);
+  background: var(--card-bg);
+  transition: all 0.2s ease-in-out;
+}
+
+.alphabet-nav a:hover {
+  background: var(--link-color);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+.alphabet-nav a.active {
+  background: var(--link-color);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* "Tümü" butonu */
+.alphabet-nav a:last-child {
+  padding: 4px 12px;
+}
