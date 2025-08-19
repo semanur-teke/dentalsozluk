@@ -35,7 +35,6 @@ html.dark-mode{
   border:1px solid var(--border);
   box-shadow:var(--shadow);
 }
-
 #suggestions-box .item{
   display:flex; align-items:center; gap:8px;
   padding:10px 14px; line-height:1.35; cursor:pointer;
@@ -43,15 +42,9 @@ html.dark-mode{
   color:var(--text);
 }
 #suggestions-box .item:hover,
-#suggestions-box .item.active{
-  background:var(--tag-bg);
-}
-#suggestions-box .kw{
-  font-weight:600; color:var(--link-color);
-}
-#suggestions-box .empty{
-  padding:12px 14px; color:var(--text); opacity:.7;
-}
+#suggestions-box .item.active{ background:var(--tag-bg); }
+#suggestions-box .kw{ font-weight:600; color:var(--link-color); }
+#suggestions-box .empty{ padding:12px 14px; color:var(--text); opacity:.7; }
 
 /* Mobilde biraz sığdır */
 @media (max-width:480px){
@@ -64,42 +57,56 @@ html.dark-mode{
   color:var(--text);
   border:1px solid var(--border);
 }
-.navbar-search .search-input::placeholder{
-  color:var(--text-muted);
-}
+.navbar-search .search-input::placeholder{ color:var(--text-muted); }
 
 /* ===================== */
 /*     ALFABE / HARFLER  */
 /* ===================== */
-.letter-filter{
-  display:flex; flex-wrap:wrap; gap:8px;
-  justify-content:center; margin:20px 0;
+
+/* Konteyner (yeni stil aralığı; pagination’a dokunmuyoruz) */
+.alphabet-nav{
+  text-align:center;
+  margin:20px 0 32px;
+  padding:0 20px;
 }
 
-.letter-filter a{
-  display:flex; align-items:center; justify-content:center;
-  width:38px; height:38px; font-weight:600;
-  border-radius:8px;
-  background:var(--surface);
-  color:var(--link-color);
-  border:1px solid var(--border);
-  box-shadow:var(--shadow-small);
+/* Harf “chip”leri (yeni görünüm) */
+.alphabet-nav a{
+  display:inline-block;
+  padding:8px 12px;
+  margin:2px;
+  border-radius:10px;
   text-decoration:none;
+  line-height:1.2;
+  border:1px solid var(--card-border);
+  color:var(--link-color);
+  background:var(--card-bg);
   transition:all .2s ease-in-out;
+  min-width:36px;
+  text-align:center;
+  font-weight:600;
+  font-size:14px;
 }
-.letter-filter a:hover{
-  background:var(--link-color); color:#fff; border-color:var(--link-color);
+.alphabet-nav a:hover{
+  background:var(--link-color);
+  color:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
 }
-.letter-filter a.active{
-  background:var(--link-color); color:#fff; border-color:var(--link-color);
+.alphabet-nav a.active{
+  background:var(--link-color);
+  color:#fff;
+  border-color:transparent;
 }
-.letter-filter a.all{
-  padding:0 14px; width:auto; min-width:50px;
+/* "Tümü" butonu biraz geniş */
+.alphabet-nav a:last-child{
+  padding:8px 16px;
+  min-width:50px;
 }
 
 /* Küçük ekran */
 @media (max-width:480px){
-  .letter-filter a{ width:32px; height:32px; font-size:.85rem; }
+  .alphabet-nav a{ padding:6px 10px; min-width:32px; font-size:13px; }
+  .alphabet-nav a:last-child{ padding:6px 12px; min-width:45px; }
 }
 
 /* ===================== */
@@ -112,35 +119,3 @@ html.dark-mode{
 .term-card{ margin:0; }
 .term-title a{ text-decoration:none; }
 .term-title a:hover{ text-decoration:underline; }
-
-/* ===================== */
-/* Dark mode uyumlu alfabe menü */
-/* ===================== */
-.alphabet-nav a {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 10px;
-  text-decoration: none;
-  line-height: 1.2;
-  border: 1px solid var(--card-border);
-  color: var(--link-color);
-  background: var(--card-bg);
-  transition: all 0.2s ease-in-out;
-}
-
-.alphabet-nav a:hover {
-  background: var(--link-color);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,.06);
-}
-
-.alphabet-nav a.active {
-  background: var(--link-color);
-  color: #fff;
-  border-color: transparent;
-}
-
-/* "Tümü" butonu */
-.alphabet-nav a:last-child {
-  padding: 4px 12px;
-}

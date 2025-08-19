@@ -5,19 +5,18 @@
   <h2 class="mb-4" style="color: var(--link-color);">Tüm Diş Terimleri</h2>
 
   <!-- Alfabetik Hızlı Navigasyon -->
-<nav class="alphabet-nav" role="navigation" aria-label="Alfabetik navigasyon">
-  {% if has_digit %}
-    <a href="{% url 'terms:term_list' %}?letter=0-9{% if q %}&q={{ q|urlencode }}{% endif %}"
-       class="{% if letter == '0-9' %}active{% endif %}">0-9</a>
-  {% endif %}
-  {% for L in letters %}
-    <a href="{% url 'terms:term_list' %}?letter={{ L }}{% if q %}&q={{ q|urlencode }}{% endif %}"
-       class="{% if letter == L %}active{% endif %}">{{ L }}</a>
-  {% endfor %}
-  <a href="{% url 'terms:term_list' %}{% if q %}?q={{ q|urlencode }}{% endif %}"
-     class="{% if letter == 'all' or not letter %}active{% endif %}">Tümü</a>
-</nav>
-
+  <nav class="alphabet-nav" role="navigation" aria-label="Alfabetik navigasyon">
+    {% if has_digit %}
+      <a href="{% url 'terms:term_list' %}?letter=0-9{% if q %}&q={{ q|urlencode }}{% endif %}"
+         class="{% if letter == '0-9' %}active{% endif %}">0-9</a>
+    {% endif %}
+    {% for L in letters %}
+      <a href="{% url 'terms:term_list' %}?letter={{ L }}{% if q %}&q={{ q|urlencode }}{% endif %}"
+         class="{% if letter == L %}active{% endif %}">{{ L }}</a>
+    {% endfor %}
+    <a href="{% url 'terms:term_list' %}{% if q %}?q={{ q|urlencode }}{% endif %}"
+       class="{% if letter == 'all' or not letter %}active{% endif %}">Tümü</a>
+  </nav>
 
   <!-- Liste -->
   {% for term in terms %}
@@ -37,7 +36,7 @@
     <p class="term-card-empty">Henüz terim eklenmemiş.</p>
   {% endfor %}
 
-  <!-- Elided Pagination + parametre koruma -->
+  <!-- Elided Pagination + parametre koruma (ESKİ HALİYLE KALSIN) -->
   {% if paginator.num_pages > 1 %}
   <nav aria-label="Sayfa navigasyonu">
     <ul class="pagination justify-content-center">
