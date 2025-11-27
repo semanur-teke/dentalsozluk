@@ -1,13 +1,26 @@
-asgiref==3.9.1
-dj-database-url==2.1.0
+# Core Django
 Django==5.2.4
-django-csp==4.0
-django-ratelimit==4.1.0
-gunicorn==21.2.0
-packaging==25.0
-psycopg2-binary==2.9.9
-python-dotenv==1.0.0
+asgiref==3.9.1
 sqlparse==0.5.3
 typing_extensions==4.14.1
-whitenoise==6.6.0
+
+# Database
+dj-database-url==2.1.0
+psycopg2==2.9.10
+
+# Cache & Rate Limiting
+redis==5.2.1
 django-ratelimit==4.1.0
+
+# Security
+django-csp==4.0
+
+# Static Files
+whitenoise==6.8.2
+
+# Server
+gunicorn==23.0.0
+
+# Environment
+python-dotenv==1.0.0
+packaging==25.0

@@ -1,32 +1,54 @@
-# Sanal ortam
-.venv/
-venv/
-
-# IDE ayarları
-.idea/
-
-# Python cache
+# Python
 __pycache__/
 *.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
 
-# SQLite veritabanı
-db.sqlite3
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
 
-# Django migrations (isteğe bağlı)
-# **/migrations/
-
-# Diğer geçici dosyalar
+# Django
 *.log
 *.pot
 *.py~
-
-# Local environment variables
-.env
-
-# Django collectstatic output
+db.sqlite3
+db.sqlite3-journal
 staticfiles/
-# Env yedekleri
+media/
+logs/
+
+# Environment variables
+.env
+.env.local
 .env.save
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.cover
+
+# OS
+.DS_Store
+Thumbs.db
 
 # CSV script çıktıları
 scripts/*.csv
+datas/
+duplicates*.csv
+dup.csv

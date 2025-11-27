@@ -3,11 +3,11 @@ from django.db import models
 from django.utils.text import slugify
 
 class DentalTerm(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, db_index=True)
     description = models.TextField()
-    english_equivalent = models.CharField(max_length=100, blank=True, null=True)
-    latin_equivalent = models.CharField(max_length=100, blank=True, null=True)
-    slug = models.SlugField(max_length=255, unique=True)
+    english_equivalent = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    latin_equivalent = models.CharField(max_length=100, blank=True, null=True, db_index=True)
+    slug = models.SlugField(max_length=255, unique=True)  # unique implies db_index
     
 
     def save(self, *args, **kwargs):
@@ -29,11 +29,16 @@ from django.utils import timezone
 from datetime import timedelta
 
 class ErrorReport(models.Model):
-    term = models.ForeignKey(DentalTerm, on_delete=models.CASCADE, related_name='error_reports')
+    term = models.ForeignKey(DentalTerm, on_delete=models.CASCADE, related_name='error_reports')  # FK implies db_index
     description = models.TextField(blank=True, help_text="(Opsiyonel) Hata hakkında ekstra bilgi")
     honeypot = models.CharField(max_length=100, blank=True, help_text="Bot kontrolü için gizli alan")
-    session_key = models.CharField(max_length=40, blank=True, null=True, help_text="Kullanıcı oturumu için")
-    created = models.DateTimeField(auto_now_add=True)
+    session_key = models.CharField(max_length=40, blank=True, null=True, db_index=True, help_text="Kullanıcı oturumu için")
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['term', 'session_key', 'created']),  # recently_reported query için composite index
+        ]
 
     def __str__(self):
         return f"Hata bildirimi: {self.term.title} @ {self.created:%Y-%m-%d %H:%M}"

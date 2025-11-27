@@ -1,54 +1,30 @@
 # terms/views.py
-
-from django.shortcuts              import render, get_object_or_404
-from django.core.paginator         import Paginator
-from django.db.models              import Q
-from django.http                   import JsonResponse
-from django.views.decorators.http  import require_POST
-from django.views.decorators.csrf  import csrf_exempt
 import json
+import logging
+
+from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
+from django.db.models import Q, F, Func
+from django.db.models.functions import Lower, Substr, Upper
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
-from django.http import JsonResponse
-from .models import ErrorReport, DentalTerm
-from django.http import HttpResponse
-
 from django.urls import reverse
-
 from django_ratelimit.decorators import ratelimit
 
-from django.shortcuts      import render
-from django.core.paginator  import Paginator
-from .models               import DentalTerm
-from .models                       import DentalTerm, ErrorReport
+from .models import DentalTerm, ErrorReport
 
+# Logger yapılandırması
+logger = logging.getLogger(__name__)
 
 app_name = 'terms'
 
 
-from django.shortcuts import render
-
-
 def home(request):
+    """Ana sayfa görünümü."""
     context = {
-        'hide_search': True,  # Bu satır navbar'daki arama kutusunu gizler
+        'hide_search': True,
     }
     return render(request, 'home.html', context)
-
-
-# Eğer class-based view kullanıyorsanız:
-from django.views.generic import TemplateView
-
-
-class HomeView(TemplateView):
-    template_name = 'terms/home.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['hide_search'] = True  # Bu satır navbar'daki arama kutusunu gizler
-        return context
-
-
-from django.shortcuts import render
 
 def hakkimizda(request):
     return render(request, 'static_pages/hakkimizda.html')
@@ -97,66 +73,82 @@ def term_detail(request, slug):
 @ratelimit(key='ip', rate='3/m', method='POST', block=True)
 @require_POST
 def report_error(request):
+    """Terim hatası bildirimi endpoint'i."""
     if getattr(request, 'limited', False):
+        logger.warning(f"Rate limit exceeded for IP: {request.META.get('REMOTE_ADDR')}")
         return JsonResponse({
             'status': 'error',
             'message': 'Çok sık deneme yaptınız. Lütfen 1 dakika bekleyin.'
         }, status=429)
+
     try:
+        # Content-Type'a göre veri parse et
         if request.content_type == 'application/json':
             try:
                 data = json.loads(request.body.decode('utf-8'))
                 term_id = data.get('term_id')
                 honeypot = data.get('honeypot', '')
-            except:
+            except (json.JSONDecodeError, UnicodeDecodeError) as e:
+                logger.error(f"JSON parse error: {e}")
                 term_id = request.POST.get('term_id')
                 honeypot = request.POST.get('honeypot', '')
         else:
             term_id = request.POST.get('term_id')
             honeypot = request.POST.get('honeypot', '')
 
+        # Session key oluştur
         session_key = request.session.session_key
         if not session_key:
             request.session.create()
             session_key = request.session.session_key
 
     except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+        logger.error(f"Error parsing request data: {e}", exc_info=True)
+        return JsonResponse({'status': 'error', 'message': 'Geçersiz istek'}, status=400)
 
+    # Bot kontrolü (honeypot)
     if honeypot:
+        logger.warning(f"Bot detected from IP: {request.META.get('REMOTE_ADDR')}")
         return JsonResponse({'status': 'error', 'message': 'Bot tespit edildi'}, status=400)
 
+    # term_id zorunlu
     if not term_id:
+        logger.error("Missing term_id in request")
         return JsonResponse({'status': 'error', 'message': 'term_id eksik'}, status=400)
 
     try:
         term = DentalTerm.objects.get(pk=term_id)
 
-        # ✅ Tekrar gönderim kontrolü (örnek: 60 saniye)
+        # Tekrar gönderim kontrolü (60 saniye)
         if ErrorReport.recently_reported(term_id, session_key, within_seconds=60):
+            logger.info(f"Duplicate report attempt for term {term_id} from session {session_key}")
             return JsonResponse({'status': 'info', 'message': 'Zaten bildirildi'}, status=200)
 
+        # Hata raporu oluştur
         ErrorReport.objects.create(
             term=term,
             honeypot=honeypot,
             session_key=session_key
         )
 
+        logger.info(f"Error report created for term {term_id} (slug: {term.slug})")
         return JsonResponse({'status': 'success'})
+
     except DentalTerm.DoesNotExist:
+        logger.error(f"Term not found: {term_id}")
         return JsonResponse({'status': 'error', 'message': 'Terim bulunamadı'}, status=404)
     except Exception as e:
+        logger.error(f"Database error while creating error report: {e}", exc_info=True)
         return JsonResponse({'status': 'error', 'message': 'Kayıt hatası'}, status=500)
 
 
-from django.http import JsonResponse
-from django.urls import path
-from terms.models import DentalTerm
-
 def debug_count(request):
+    """Debug: Toplam terim sayısını döndürür."""
     return JsonResponse({"count": DentalTerm.objects.count()})
 
+
 def autocomplete_terms(request):
+    """Arama kutusu için autocomplete önerileri."""
     q = (request.GET.get("q") or "").strip()
     if len(q) < 2:
         return JsonResponse([], safe=False)
@@ -175,11 +167,6 @@ def autocomplete_terms(request):
             for r in rows]
     return JsonResponse(data, safe=False)
 
-from django.core.paginator import Paginator
-from django.db.models import Q, F, Func
-from django.db.models.functions import Lower, Substr, Upper
-from django.shortcuts import render
-from .models import DentalTerm  # model adın buysa
 
 RESULTS_PER_PAGE = 20
 

@@ -42,7 +42,7 @@ if DEBUG:
     SESSION_COOKIE_HTTPONLY = True
     CSRF_COOKIE_HTTPONLY = True
 else:
-    # Production güvenlik ayarları - DÜZELTİLDİ
+    # Production güvenlik ayarları
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
@@ -54,49 +54,41 @@ else:
     SESSION_COOKIE_HTTPONLY = True
     CSRF_COOKIE_HTTPONLY = True
     X_FRAME_OPTIONS = 'DENY'
-    SECURE_REFERRER_POLICY = 'no-referrer-when-downgrade'
+    # strict-origin-when-cross-origin daha güvenli (downgrade yerine)
+    SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
 
-    # CSP ayarları
-CSP_DEFAULT_SRC = (
-    "'self'",
-)
-
-CSP_SCRIPT_SRC = (
-    "'self'",
-    "'unsafe-inline'",                # inline <script>’lere izin
-    'www.googletagmanager.com',
-    'www.google-analytics.com',
-    'cdn.jsdelivr.net',                # Bootstrap JS
-    'cdnjs.cloudflare.com',            # FontAwesome ve benzeri
-)
-
-CSP_STYLE_SRC = (
-    "'self'",
-    "'unsafe-inline'",                 # inline <style> ve style=""
-    'cdn.jsdelivr.net',                # Bootstrap CSS
-    'cdnjs.cloudflare.com',            # FontAwesome CSS
-)
-
-CSP_FONT_SRC = (
-    "'self'",
-    'fonts.gstatic.com',               # Google Fonts
-    'cdn.jsdelivr.net',
-    'cdnjs.cloudflare.com',
-    'data:',                           # base64 font’lar
-)
-
-CSP_IMG_SRC = (
-    "'self'",
-    'data:',
-    'https:',
-    'www.google-analytics.com',
-)
-
-CSP_CONNECT_SRC = (
-    "'self'",
-    'www.google-analytics.com',
-    'analytics.google.com',
-)
+    # CSP ayarları - ŞİMDİLİK YORUM SATIRINDA (inline script'ler var)
+    # TODO: Inline script'leri external'e taşıyınca aktif et
+    # CSP_DEFAULT_SRC = ("'self'",)
+    # CSP_SCRIPT_SRC = (
+    #     "'self'",
+    #     'www.googletagmanager.com',
+    #     'www.google-analytics.com',
+    #     'cdn.jsdelivr.net',
+    #     'cdnjs.cloudflare.com',
+    # )
+    # CSP_STYLE_SRC = (
+    #     "'self'",
+    #     'cdn.jsdelivr.net',
+    #     'cdnjs.cloudflare.com',
+    # )
+    # CSP_FONT_SRC = (
+    #     "'self'",
+    #     'fonts.gstatic.com',
+    #     'cdn.jsdelivr.net',
+    #     'cdnjs.cloudflare.com',
+    #     'data:',
+    # )
+    # CSP_IMG_SRC = (
+    #     "'self'",
+    #     'data:',
+    #     'www.google-analytics.com',
+    # )
+    # CSP_CONNECT_SRC = (
+    #     "'self'",
+    #     'www.google-analytics.com',
+    #     'analytics.google.com',
+    # )
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -180,6 +172,71 @@ USE_TZ = True
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ─── LOGGING CONFIGURATION ─────────────────────────────────────────────────────
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'level': 'WARNING',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR / 'logs' / 'django.log',
+            'maxBytes': 1024 * 1024 * 10,  # 10 MB
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['require_debug_false'],
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file', 'mail_admins'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console', 'file', 'mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'terms': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
 
 # --- Proxy / HTTPS arkasında doğru IP & şema ---
 USE_X_FORWARDED_HOST = True
