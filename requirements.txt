@@ -6,7 +6,7 @@ typing_extensions==4.14.1
 
 # Database
 dj-database-url==2.1.0
-psycopg2==2.9.10
+psycopg2-binary==2.9.10
 
 # Cache & Rate Limiting
 redis==5.2.1
