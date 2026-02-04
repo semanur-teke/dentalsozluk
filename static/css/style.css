@@ -677,16 +677,45 @@ html.dark-mode .navbar-toggler-icon {
 
 @media (max-width: 768px) {
   .static-page {
-    margin: 1rem;
-    padding: 20px;
+    margin: 0;
+    padding: 20px 15px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    box-shadow: none;
   }
 
   .static-page h1 {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
 
   .static-page h2 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
+    margin-top: 1.5rem;
+  }
+
+  .static-page ul {
+    padding-left: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .static-page {
+    padding: 15px 12px;
+  }
+
+  .static-page h1 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .static-page h2 {
+    font-size: 1.1rem;
+  }
+
+  .static-page p,
+  .static-page li {
+    font-size: 0.95rem;
   }
 }
 /* Küçük Sol Alt Köşe Cookie Banner */
