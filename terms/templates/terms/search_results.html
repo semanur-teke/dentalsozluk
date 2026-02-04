@@ -2,7 +2,11 @@
 {% load static %}
 
 {% block content %}
-  <h2 style="color: #7a5fac;">🔍 Aranan terim: "{{ query }}"</h2>
+  {% if query %}
+    <h2 style="color: #7a5fac;">🔍 Aranan terim: "{{ query }}"</h2>
+  {% else %}
+    <h2 style="color: #7a5fac;">🔍 Arama</h2>
+  {% endif %}
   <hr>
 
   {% if matched_term %}

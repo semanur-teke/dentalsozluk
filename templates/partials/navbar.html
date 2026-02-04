@@ -17,13 +17,12 @@
       autocomplete="off">
   <input id="search-input"
          type="search"
-         name="query"
+         name="q"
          class="search-input"
          placeholder="Terim ara..."
          value="{{ request.GET.q|default:'' }}"
          aria-label="Terim ara"
          autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
-  <input type="hidden" name="q" id="search-hidden-q" value="{{ request.GET.q|default:'' }}">
   <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
 </form>
 
