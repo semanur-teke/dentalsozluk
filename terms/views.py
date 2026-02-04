@@ -73,11 +73,19 @@ def search_results(request):
     query = request.GET.get('q', '')
     matched_term = None
     if query:
+        # Önce başlangıçta eşleşenleri ara (daha alakalı)
         matched_term = DentalTerm.objects.filter(
-            Q(title__icontains=query) |
-            Q(english_equivalent__icontains=query) |
-            Q(latin_equivalent__icontains=query)
+            Q(title__istartswith=query) |
+            Q(english_equivalent__istartswith=query) |
+            Q(latin_equivalent__istartswith=query)
         ).first()
+        # Bulunamazsa içinde geçenleri ara
+        if not matched_term:
+            matched_term = DentalTerm.objects.filter(
+                Q(title__icontains=query) |
+                Q(english_equivalent__icontains=query) |
+                Q(latin_equivalent__icontains=query)
+            ).first()
     return render(request, 'terms/search_results.html', {
         'query': query,
         'matched_term': matched_term,
@@ -161,18 +169,33 @@ def autocomplete_terms(request):
     if len(q) < 2:
         return JsonResponse([], safe=False)
 
-    rows = (DentalTerm.objects
+    # Önce başlangıçta eşleşenler (daha alakalı)
+    starts_with = list(DentalTerm.objects
             .filter(
-                Q(title__icontains=q) |
-                Q(english_equivalent__icontains=q) |
-                Q(latin_equivalent__icontains=q)
+                Q(title__istartswith=q) |
+                Q(english_equivalent__istartswith=q) |
+                Q(latin_equivalent__istartswith=q)
             )
             .order_by("title")
             .values("slug", "title")[:5])
 
+    # Eksik kalan slotları içinde geçenlerle doldur
+    if len(starts_with) < 5:
+        existing_slugs = {r["slug"] for r in starts_with}
+        contains = list(DentalTerm.objects
+                .filter(
+                    Q(title__icontains=q) |
+                    Q(english_equivalent__icontains=q) |
+                    Q(latin_equivalent__icontains=q)
+                )
+                .exclude(slug__in=existing_slugs)
+                .order_by("title")
+                .values("slug", "title")[:5 - len(starts_with)])
+        starts_with.extend(contains)
+
     data = [{"title": r["title"],
              "url":  reverse("terms:term_detail", kwargs={"slug": r["slug"]})}
-            for r in rows]
+            for r in starts_with]
     return JsonResponse(data, safe=False)
 
 from django.core.paginator import Paginator
@@ -183,14 +206,23 @@ from .models import DentalTerm  # model adın buysa
 
 RESULTS_PER_PAGE = 20
 
+# Türkçe alfabe sıralaması
+TURKISH_ALPHABET = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ"
+
+def _turkish_sort_key(letter):
+    """Türkçe alfabeye göre sıralama anahtarı"""
+    try:
+        return TURKISH_ALPHABET.index(letter.upper())
+    except ValueError:
+        return 999  # Bilinmeyen harfler sona
+
 def _apply_alpha_filter(qs, letter: str):
     if not letter or letter.lower() == "all":
         return qs
     if letter == "0-9":
         return qs.filter(title__iregex=r"^[0-9]")
-    # Lower(unaccent(title)) ile baş harf (index olmasa da çalışır)
-    qs = qs.annotate(title_unaccent_lower=Lower(Func(F("title"), function="unaccent")))
-    return qs.filter(title_unaccent_lower__startswith=letter.lower())
+    # Türkçe karakterleri destekle - unaccent KULLANMA
+    return qs.filter(title__istartswith=letter)
 
 def _available_letters():
     letters = (
@@ -200,7 +232,8 @@ def _available_letters():
         .distinct()
     )
     has_digit = any(l and l.isdigit() for l in letters)
-    letters = sorted({l for l in letters if l and l.isalpha()})
+    # Türkçe alfabeye göre sırala
+    letters = sorted({l for l in letters if l and l.isalpha()}, key=_turkish_sort_key)
     return letters, has_digit
 
 def term_list(request):

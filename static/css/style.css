@@ -616,11 +616,78 @@ html.dark-mode .navbar-toggler-icon {
 }
 
 
-/* static_pages için style.css içine ekleyin */
+/* ===== STATİK SAYFALAR (Hakkımızda, Çerez, Gizlilik) ===== */
 .static-page {
-  max-width: 700px;      /* optimal satır uzunluğu */
-  margin: 2rem auto;      /* yatayda ortaya hizala, dikey boşluk */
-  line-height: 1.7;       /* satırlar arasında nefes alma alanı */
+  max-width: 750px;
+  margin: 2rem auto;
+  padding: 30px;
+  background-color: var(--card-bg);
+  border-radius: 16px;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-light);
+  line-height: 1.8;
+}
+
+.static-page h1 {
+  color: var(--link-color);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid var(--btn-bg);
+}
+
+.static-page h2 {
+  color: var(--link-color);
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.static-page p {
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.static-page ul {
+  margin: 1rem 0 1.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.static-page li {
+  margin-bottom: 0.75rem;
+  color: var(--text-color);
+}
+
+.static-page a {
+  color: var(--link-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.static-page a:hover {
+  text-decoration: underline;
+}
+
+.static-page strong {
+  color: var(--link-color);
+}
+
+@media (max-width: 768px) {
+  .static-page {
+    margin: 1rem;
+    padding: 20px;
+  }
+
+  .static-page h1 {
+    font-size: 1.6rem;
+  }
+
+  .static-page h2 {
+    font-size: 1.2rem;
+  }
 }
 /* Küçük Sol Alt Köşe Cookie Banner */
 .cookie-banner {
