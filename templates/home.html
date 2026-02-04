@@ -18,8 +18,8 @@
 
       
 
-    <form class="search-form" method="get" action="{% url 'terms:search_results' %}">
-      <input type="text" name="q" class="form-control" placeholder="Bir terim ara.." required>
+    <form class="search-form navbar-search" method="get" action="{% url 'terms:search_results' %}" data-endpoint="{% url 'terms:autocomplete_terms' %}">
+      <input type="text" name="q" id="search-input" class="form-control" placeholder="Bir terim ara.." required autocomplete="off">
       <button type="submit" class="btn btn-lg w-100">Ara</button>
     </form>
 
