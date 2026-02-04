@@ -79,12 +79,13 @@ def search_results(request):
             Q(english_equivalent__istartswith=query) |
             Q(latin_equivalent__istartswith=query)
         ).first()
-        # Bulunamazsa içinde geçenleri ara
+        # Bulunamazsa içinde geçenleri ara (search_aliases dahil)
         if not matched_term:
             matched_term = DentalTerm.objects.filter(
                 Q(title__icontains=query) |
                 Q(english_equivalent__icontains=query) |
-                Q(latin_equivalent__icontains=query)
+                Q(latin_equivalent__icontains=query) |
+                Q(search_aliases__icontains=query)
             ).first()
     return render(request, 'terms/search_results.html', {
         'query': query,
@@ -179,14 +180,15 @@ def autocomplete_terms(request):
             .order_by("title")
             .values("slug", "title")[:5])
 
-    # Eksik kalan slotları içinde geçenlerle doldur
+    # Eksik kalan slotları içinde geçenlerle doldur (search_aliases dahil)
     if len(starts_with) < 5:
         existing_slugs = {r["slug"] for r in starts_with}
         contains = list(DentalTerm.objects
                 .filter(
                     Q(title__icontains=q) |
                     Q(english_equivalent__icontains=q) |
-                    Q(latin_equivalent__icontains=q)
+                    Q(latin_equivalent__icontains=q) |
+                    Q(search_aliases__icontains=q)
                 )
                 .exclude(slug__in=existing_slugs)
                 .order_by("title")
@@ -248,13 +250,14 @@ def term_list(request):
     # Harf filtresi
     qs = _apply_alpha_filter(qs, letter)
 
-    # Basit metin arama
+    # Basit metin arama (search_aliases dahil)
     if q:
         qs = qs.filter(
             Q(title__icontains=q) |
             Q(description__icontains=q) |
             Q(english_equivalent__icontains=q) |
-            Q(latin_equivalent__icontains=q)
+            Q(latin_equivalent__icontains=q) |
+            Q(search_aliases__icontains=q)
         )
 
     # Sayfalama + elided range

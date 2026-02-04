@@ -8,6 +8,11 @@ class DentalTerm(models.Model):
     english_equivalent = models.CharField(max_length=100, blank=True, null=True)
     latin_equivalent = models.CharField(max_length=100, blank=True, null=True)
     slug = models.SlugField(max_length=255, unique=True)
+    search_aliases = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Alternatif yazılışlar (virgülle ayırın). Örn: miyokart, myokard"
+    )
     
 
     def save(self, *args, **kwargs):
