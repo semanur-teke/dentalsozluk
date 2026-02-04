@@ -189,11 +189,21 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 RATELIMIT_USE_X_FORWARDED = True
 
 # --- Cache: ratelimit sayaçları için şart ---
-# (İlk aşamada LocMem; çok-işçi (multi-worker) kullanıyorsan Redis'e geçir)
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+# Redis URL varsa Redis kullan, yoksa LocMemCache (tek worker için yeterli)
+REDIS_URL = os.environ.get('REDIS_URL', '')
+
+if REDIS_URL:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": REDIS_URL,
+        }
     }
-}
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "unique-snowflake",
+        }
+    }
 
