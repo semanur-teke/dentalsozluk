@@ -62,7 +62,7 @@ def gizlilik_ilkesi(request):
 def robots_txt(request):
     content = (
         "User-agent: *\n"
-        "Disallow: /admin/\n"
+        "Disallow: /spiderman-semapai/\n"
         "Disallow: /report_error/\n"
         "Sitemap: https://www.dentalsozluk.com/sitemap.xml\n"
     )
