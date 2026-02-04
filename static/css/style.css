@@ -1030,15 +1030,31 @@ html.dark-mode .search-form .form-control:focus {
   background-color: var(--card-bg) !important;
   color: var(--text-color) !important;
   border-color: var(--btn-bg) !important;
-  box-shadow: 0 0 0 3px rgba(166,120,180,0.12) !important; /* hafif mor halka */
+  box-shadow: 0 0 0 3px rgba(166,120,180,0.12) !important;
 }
 
-/* Chrome/Safari autofill beyazlaması */
+/* Chrome/Safari autofill beyazlaması - tüm durumlar */
 html.dark-mode .home-card input:-webkit-autofill,
-html.dark-mode .search-form input:-webkit-autofill {
+html.dark-mode .search-form input:-webkit-autofill,
+html.dark-mode .home-card input:-webkit-autofill:hover,
+html.dark-mode .search-form input:-webkit-autofill:hover,
+html.dark-mode .home-card input:-webkit-autofill:focus,
+html.dark-mode .search-form input:-webkit-autofill:focus,
+html.dark-mode .home-card input:-webkit-autofill:active,
+html.dark-mode .search-form input:-webkit-autofill:active {
   -webkit-text-fill-color: var(--text-color) !important;
-  -webkit-box-shadow: 0 0 0 1000px var(--card-bg) inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #1e1e1e inset !important;
+  box-shadow: 0 0 0 1000px #1e1e1e inset !important;
+  background-color: #1e1e1e !important;
   caret-color: var(--text-color) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Firefox autofill */
+html.dark-mode .home-card input:autofill,
+html.dark-mode .search-form input:autofill {
+  background-color: #1e1e1e !important;
+  color: var(--text-color) !important;
 }
 
 /* "Ara" butonu: active/focus'ta beyazlama olmasın */
