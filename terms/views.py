@@ -25,6 +25,26 @@ from .models                       import DentalTerm, ErrorReport
 app_name = 'terms'
 
 
+def _get_search_variants(q):
+    """Arama sorgusu için varyantlar oluştur (boşluklu/boşluksuz)"""
+    q = q.strip()
+    no_space = q.replace(" ", "")
+    # Eğer boşluk varsa veya yoksa, her iki versiyonu da döndür
+    variants = {q}
+    if no_space != q:
+        variants.add(no_space)
+    return list(variants)
+
+
+def _build_search_q(variants, fields, lookup='icontains'):
+    """Verilen varyantlar ve alanlar için Q nesnesi oluştur"""
+    q_obj = Q()
+    for variant in variants:
+        for field in fields:
+            q_obj |= Q(**{f"{field}__{lookup}": variant})
+    return q_obj
+
+
 from django.shortcuts import render
 
 
@@ -73,19 +93,18 @@ def search_results(request):
     query = request.GET.get('q', '')
     matched_term = None
     if query:
+        variants = _get_search_variants(query)
+        fields_main = ['title', 'english_equivalent', 'latin_equivalent']
+        fields_all = fields_main + ['search_aliases']
+
         # Önce başlangıçta eşleşenleri ara (daha alakalı)
         matched_term = DentalTerm.objects.filter(
-            Q(title__istartswith=query) |
-            Q(english_equivalent__istartswith=query) |
-            Q(latin_equivalent__istartswith=query)
+            _build_search_q(variants, fields_main, 'istartswith')
         ).first()
         # Bulunamazsa içinde geçenleri ara (search_aliases dahil)
         if not matched_term:
             matched_term = DentalTerm.objects.filter(
-                Q(title__icontains=query) |
-                Q(english_equivalent__icontains=query) |
-                Q(latin_equivalent__icontains=query) |
-                Q(search_aliases__icontains=query)
+                _build_search_q(variants, fields_all, 'icontains')
             ).first()
     return render(request, 'terms/search_results.html', {
         'query': query,
@@ -170,13 +189,13 @@ def autocomplete_terms(request):
     if len(q) < 2:
         return JsonResponse([], safe=False)
 
+    variants = _get_search_variants(q)
+    fields_main = ['title', 'english_equivalent', 'latin_equivalent']
+    fields_all = fields_main + ['search_aliases']
+
     # Önce başlangıçta eşleşenler (daha alakalı)
     starts_with = list(DentalTerm.objects
-            .filter(
-                Q(title__istartswith=q) |
-                Q(english_equivalent__istartswith=q) |
-                Q(latin_equivalent__istartswith=q)
-            )
+            .filter(_build_search_q(variants, fields_main, 'istartswith'))
             .order_by("title")
             .values("slug", "title")[:5])
 
@@ -184,12 +203,7 @@ def autocomplete_terms(request):
     if len(starts_with) < 5:
         existing_slugs = {r["slug"] for r in starts_with}
         contains = list(DentalTerm.objects
-                .filter(
-                    Q(title__icontains=q) |
-                    Q(english_equivalent__icontains=q) |
-                    Q(latin_equivalent__icontains=q) |
-                    Q(search_aliases__icontains=q)
-                )
+                .filter(_build_search_q(variants, fields_all, 'icontains'))
                 .exclude(slug__in=existing_slugs)
                 .order_by("title")
                 .values("slug", "title")[:5 - len(starts_with)])
@@ -250,15 +264,11 @@ def term_list(request):
     # Harf filtresi
     qs = _apply_alpha_filter(qs, letter)
 
-    # Basit metin arama (search_aliases dahil)
+    # Basit metin arama (search_aliases dahil, boşluklu/boşluksuz varyantlar)
     if q:
-        qs = qs.filter(
-            Q(title__icontains=q) |
-            Q(description__icontains=q) |
-            Q(english_equivalent__icontains=q) |
-            Q(latin_equivalent__icontains=q) |
-            Q(search_aliases__icontains=q)
-        )
+        variants = _get_search_variants(q)
+        fields = ['title', 'description', 'english_equivalent', 'latin_equivalent', 'search_aliases']
+        qs = qs.filter(_build_search_q(variants, fields, 'icontains'))
 
     # Sayfalama + elided range
     paginator   = Paginator(qs, RESULTS_PER_PAGE)
