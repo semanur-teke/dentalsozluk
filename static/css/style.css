@@ -77,9 +77,26 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 200px);
+  min-height: calc(100vh - 250px);
   padding: 20px;
   background-color: var(--bg-color);
+  margin-top: -30px;
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    min-height: calc(100vh - 200px);
+    margin-top: -50px;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-container {
+    min-height: calc(100vh - 180px);
+    margin-top: -60px;
+    padding: 10px;
+  }
 }
 
 .home-card {
